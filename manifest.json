@@ -3,7 +3,7 @@
   "name": "Webpage Section Screenshot",
   "short_name": "WS Screenshot",
   "version": "1.2.0",
-  "description": "Capture full-page screenshots and split them by page sections — by headings, semantic HTML, or custom selectors. Export as PNG, JPEG, or ZIP.",
+  "description": "Capture full-page screenshots split by page sections — headings, semantic HTML, or custom selectors. Export as PNG, JPEG, or ZIP.",
   "permissions": [
     "activeTab",
     "scripting",
