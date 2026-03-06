@@ -128,6 +128,11 @@
     .dbg-h span { font-size:9px; font-weight:700; text-transform:uppercase; color:var(--text-dim); }
     .dbl { padding:3px 16px; font-family:'Cascadia Code', 'SF Mono', 'Consolas', 'Liberation Mono', monospace; font-size:9px; line-height:1.7; }
     .dbl .le { color:var(--text-sec); } .dbl .le.i { color:#60a5fa; } .dbl .le.s { color:#4ade80; } .dbl .le.w { color:#fbbf24; } .dbl .le.e { color:#f87171; }
+
+    /* Donation footer */
+    .donation { padding:6px 16px; border-top:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:space-between; font-size:11px; }
+    .donation a { color:var(--accent); text-decoration:none; display:flex; align-items:center; gap:4px; }
+    .donation a:hover { text-decoration:underline; }
     .dbl .le .t { color:var(--text-dim); margin-right:5px; }
   </style>
 </head>
@@ -166,6 +171,11 @@
   <div class="dbg" id="dbg">
     <div class="dbg-h"><span>Debug</span><button class="ib" id="dbgClr" style="width:18px;height:18px"><svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="4" x2="12" y2="12"/><line x1="12" y1="4" x2="4" y2="12"/></svg></button></div>
     <div class="dbl" id="dbgL"></div>
+  </div>
+
+  <div class="donation">
+    <span style="color:var(--text-dim)">Love this extension?</span>
+    <a href="https://buymeacoffee.com/sickgfx" target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
   </div>
 
   <script src="../lib/minizip.js"></script>

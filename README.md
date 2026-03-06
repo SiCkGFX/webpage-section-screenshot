@@ -94,4 +94,8 @@ Built with:
 
 ## Feedback & Support
 
-If you find this useful or have feature requests, please open an issue or discussion on the [GitHub repository](https://github.com/**/).
+If you find this useful or have feature requests, please open an issue or discussion on the [GitHub repository](https://github.com/SiCkGFX/webpage-section-screenshot).
+
+## Support Development
+
+Love this extension? You can support ongoing development at [Buy me a coffee](https://buymeacoffee.com/sickgfx) ☕
