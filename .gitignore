@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Chrome extension specific
+*.pem
+*.crx
+
+# Build outputs
+*.zip
+
+# Store assets (except source)
+store_assets/icon*.png
+store_assets/promo_*.png
+store_assets/screenshots/
+!store_assets/SCREENSHOT_GUIDE.md
+!store_assets/README.md
+
+# Distribution
+dist/
+build/
+release/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ignore local test files
+test-*.html
+temp/
+
+# Internal development files (not for public repo)
+deployment-plan.md
+generate_assets.py
+generate_assets_simple.py
+setup_github.sh
+setup_github.ps1
+SUBMISSION_CHECKLIST.md
+SETUP_GUIDE.md
+GITHUB_README.md
