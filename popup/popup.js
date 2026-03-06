@@ -31,25 +31,109 @@
   const xbar = document.getElementById("xbar"), xBtn = document.getElementById("xBtn"), xLbl = document.getElementById("xLbl");
   const xFull = document.getElementById("xFull");
   const prog = document.getElementById("prog"), progT = document.getElementById("progT");
+  const themeSel = document.getElementById("themeSel");
+
+  // Storage can be unavailable if permission is missing or blocked.
+  // Keep popup functional even if preferences cannot be persisted.
+  const hasStorage = !!(chrome.storage && chrome.storage.local);
+  function storageGet(keys, onDone) {
+    if (!hasStorage) { onDone({}); return; }
+    try {
+      chrome.storage.local.get(keys, (items) => {
+        if (chrome.runtime.lastError) log(`Storage get warning: ${chrome.runtime.lastError.message}`, "w");
+        onDone(items || {});
+      });
+    } catch (e) {
+      log(`Storage get unavailable: ${e.message}`, "w");
+      onDone({});
+    }
+  }
+  function storageSet(values, onDone) {
+    if (!hasStorage) { if (onDone) onDone(); return; }
+    try {
+      chrome.storage.local.set(values, () => {
+        if (chrome.runtime.lastError) log(`Storage set warning: ${chrome.runtime.lastError.message}`, "w");
+        if (onDone) onDone();
+      });
+    } catch (e) {
+      log(`Storage set unavailable: ${e.message}`, "w");
+      if (onDone) onDone();
+    }
+  }
+
+  let themeMode = "auto";
+  const systemThemeMedia = typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-color-scheme: dark)")
+    : null;
+
+  function normalizeThemeMode(mode) {
+    if (mode === "dark" || mode === "light" || mode === "auto") return mode;
+    return "auto";
+  }
+
+  function resolveThemeMode(mode) {
+    if (mode === "dark" || mode === "light") return mode;
+    if (!systemThemeMedia) return "dark";
+    return systemThemeMedia.matches ? "dark" : "light";
+  }
+
+  function applyTheme(mode, persist = false, quiet = false) {
+    themeMode = normalizeThemeMode(mode);
+    const resolved = resolveThemeMode(themeMode);
+    document.documentElement.setAttribute("data-theme", resolved);
+    if (themeSel && themeSel.value !== themeMode) themeSel.value = themeMode;
+
+    if (persist) {
+      storageSet({ theme: themeMode }, () => log(`Saved theme: ${themeMode} (${resolved})`));
+    } else if (!quiet) {
+      log(`Theme: ${themeMode} (${resolved})`);
+    }
+  }
+
+  if (systemThemeMedia) {
+    const onSystemThemeChange = () => {
+      if (themeMode === "auto") {
+        const resolved = resolveThemeMode(themeMode);
+        applyTheme("auto", false, true);
+        log(`Theme auto switched to ${resolved}`);
+      }
+    };
+    if (typeof systemThemeMedia.addEventListener === "function") {
+      systemThemeMedia.addEventListener("change", onSystemThemeChange);
+    } else if (typeof systemThemeMedia.addListener === "function") {
+      systemThemeMedia.addListener(onSystemThemeChange);
+    }
+  }
 
   // Save format preference on change
   fmt.addEventListener("change", () => {
-    chrome.storage.local.set({ format: fmt.value }, () => log(`Saved format: ${fmt.value}`));
+    storageSet({ format: fmt.value }, () => log(`Saved format: ${fmt.value}`));
   });
+
+  if (themeSel) {
+    themeSel.addEventListener("change", () => {
+      applyTheme(themeSel.value, true);
+    });
+  }
 
   // Save custom selector preference on change
   custSel.addEventListener("change", () => {
-    chrome.storage.local.set({ customSelector: custSel.value }, () => log(`Saved custom selector`));
+    storageSet({ customSelector: custSel.value }, () => log(`Saved custom selector`));
   });
   custSel.addEventListener("blur", () => {
-    chrome.storage.local.set({ customSelector: custSel.value });
+    storageSet({ customSelector: custSel.value });
   });
 
   // ── Init ──
   log("Popup opened");
+  applyTheme("auto", false, true);
   
   // Load saved preferences
-  chrome.storage.local.get(["strategy", "format", "customSelector"], (items) => {
+  storageGet(["strategy", "format", "customSelector", "theme"], (items) => {
+    if (items.theme) {
+      applyTheme(items.theme, false, true);
+      log(`Loaded theme: ${items.theme}`);
+    }
     if (items.strategy && items.strategy !== strategy) {
       strategy = items.strategy;
       pills.forEach(p => {
@@ -87,7 +171,7 @@
     pills.forEach(x => x.classList.remove("on")); p.classList.add("on");
     strategy = p.dataset.s;
     custRow.classList.toggle("vis", strategy === "custom" || strategy === "all");
-    chrome.storage.local.set({ strategy }, () => log(`Saved strategy: ${strategy}`));
+    storageSet({ strategy }, () => log(`Saved strategy: ${strategy}`));
   }));
 
   // ── Scan ──
