@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Webpage Section Screenshot",
   "short_name": "WS Screenshot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Capture full-page screenshots split by page sections — headings, semantic HTML, or custom selectors. Export as PNG, JPEG, or ZIP.",
   "permissions": [
     "activeTab",
