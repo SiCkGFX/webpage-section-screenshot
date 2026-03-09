@@ -385,7 +385,10 @@
       const destY = Math.round(s.scrollY * pixelRatio);
       const usablePx = Math.round(s.usableHeight * pixelRatio);
       if (usablePx < pxVpH) {
-        ctx.drawImage(img, 0, 0, pxW, usablePx, 0, destY, pxW, usablePx);
+        // The browser clamped the scroll position, so the screenshot starts above scrollY.
+        // Take only the bottom usablePx rows — these correspond exactly to scrollY→docHeight.
+        const srcY = pxVpH - usablePx;
+        ctx.drawImage(img, 0, srcY, pxW, usablePx, 0, destY, pxW, usablePx);
       } else {
         ctx.drawImage(img, 0, destY);
       }
